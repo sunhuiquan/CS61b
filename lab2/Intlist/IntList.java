@@ -88,9 +88,8 @@ public class IntList {
             for (; A.rest != null; A = A.rest)
                 ;
             A.rest = B;
+            return head;
         }
-
-        return head;
     }
 
     /**
