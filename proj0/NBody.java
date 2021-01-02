@@ -12,13 +12,8 @@ public class NBody {
         Planet[] planets = new Planet[n];
 
         for (int i = 0; i < n; i++) {
-            Planet planet = new Planet();
-            planet.xxPos = in.readDouble();
-            planet.yyPos = in.readDouble();
-            planet.xxVel = in.readDouble();
-            planet.yyVel = in.readDouble();
-            planet.mass = in.readDouble();
-            planet.imgFileName = in.readString();
+            Planet planet = new Planet(in.readDouble(), in.readDouble(),
+                    in.readDouble(), in.readDouble(), in.readDouble(), in.readString());
 
             planets[i] = planet;
         }
