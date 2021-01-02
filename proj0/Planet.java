@@ -12,6 +12,15 @@ public class Planet {
 
     private static double numberG = 6.67e-11;
 
+    public Planet() {
+        xxPos = 0;
+        yyPos = 0;
+        xxVel = 0;
+        yyVel = 0;
+        mass = 0;
+        imgFileName = null;
+    }
+
     public Planet(double xP, double yP, double xV, double yV, double m, String img) {
         xxPos = xP;
         yyPos = yP;
@@ -77,5 +86,9 @@ public class Planet {
         yyVel += ay * dt;
         xxPos += xxVel * dt;
         yyPos += yyVel * dt;
+    }
+
+    public void draw() {
+        StdDraw.picture(xxPos, yyPos, "images/" + imgFileName);
     }
 }
