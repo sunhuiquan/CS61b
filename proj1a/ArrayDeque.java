@@ -110,11 +110,11 @@ public class ArrayDeque<T> {
         return tmp;
     }
 
-
     public T get(int index) {
         int pos = (index + head + 1) % capacity;
-        if (pos <= head || pos > tail || isEmpty())
+        if (index < 0 || index >= size() || isEmpty()) {
             return null;
+        }
         return array[pos];
     }
 

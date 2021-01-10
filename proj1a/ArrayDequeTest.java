@@ -108,33 +108,10 @@ public class ArrayDequeTest {
         Assert.assertEquals(3, ad.size());
     }
 
-    @Test
-    public static void addSpecialTest() {
-        ArrayDeque<Integer> ArrayDeque = new ArrayDeque<>();
-        ArrayDeque.addFirst(0);
-        int x = ArrayDeque.get(0);     // ==> 0
-        x = ArrayDeque.removeFirst();     // ==> 0
-        ArrayDeque.addFirst(3);
-        x = ArrayDeque.removeLast();     // ==> 3
-        ArrayDeque.addFirst(5);
-        x = ArrayDeque.removeLast();     // ==> 5
-        ArrayDeque.addLast(7);
-        x = ArrayDeque.removeLast();    // ==> 7
-        ArrayDeque.addFirst(9);
-        ArrayDeque.addFirst(10);
-        x = ArrayDeque.removeFirst();    // ==> 10
-        x = ArrayDeque.removeFirst();   // ==> 9
-        ArrayDeque.addFirst(13);
-        ArrayDeque.addFirst(14);
-        ArrayDeque.addFirst(15);
-        x = ArrayDeque.get(0);     // ==> null
-    }
-
     public static void main(String[] args) {
         System.out.println("Running tests.\n");
-        addSpecialTest();
-//        addGenericTest();
-//        addIsEmptySizeTest();
-//        addRemoveTest();
+        addGenericTest();
+        addIsEmptySizeTest();
+        addRemoveTest();
     }
 }
