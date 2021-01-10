@@ -71,18 +71,22 @@ public class ArrayDeque<T> {
         return false;
     }
 
-    public void removeFirst() {
+    public T removeFirst() {
         head = (head + 1) % capacity;
+        T tmp = array[head];
         if (isLess()) {
             decreaseCapacity();
         }
+        return tmp;
     }
 
-    public void removeLast() {
+    public T removeLast() {
+        T tmp = array[tail];
         tail = (tail + 1) % capacity;
         if (isLess()) {
             decreaseCapacity();
         }
+        return tmp;
     }
 
 
