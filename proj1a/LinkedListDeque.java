@@ -24,28 +24,16 @@ public class LinkedListDeque<T> {
     }
 
     public void addFirst(T item) {
-        if (isEmpty()) {
-            Node newNode = new Node(sentinel, sentinel, item);
-            sentinel.next = newNode;
-            sentinel.prev = newNode;
-        } else {
-            Node newNode = new Node(sentinel, sentinel.next, item);
-            sentinel.next.prev = newNode;
-            sentinel.next = newNode;
-        }
+        Node newNode = new Node(sentinel, sentinel.next, item);
+        sentinel.next.prev = newNode;
+        sentinel.next = newNode;
         size++;
     }
 
     public void addLast(T item) {
-        if (isEmpty()) {
-            Node newNode = new Node(sentinel, sentinel, item);
-            sentinel.next = newNode;
-            sentinel.prev = newNode;
-        } else {
-            Node newNode = new Node(sentinel, sentinel.next, item);
-            sentinel.prev.next = newNode;
-            sentinel.prev = newNode;
-        }
+        Node newNode = new Node(sentinel, sentinel.next, item);
+        sentinel.prev.next = newNode;
+        sentinel.prev = newNode;
         size++;
     }
 
@@ -59,15 +47,20 @@ public class LinkedListDeque<T> {
 
     public void printDeque() {
         for (Node tmp = sentinel.next; tmp != sentinel; tmp = tmp.next) {
+            if (tmp.next == sentinel) {
+                System.out.print(tmp.item + "\n");
+                break;
+            }
             System.out.print(tmp.item + " ");
         }
     }
 
     public T removeFirst() {
         if (!isEmpty()) {
-            --size;
+            size--;
             Node tmp = sentinel.next;
             sentinel.next = tmp.next;
+            sentinel.next.prev = sentinel;
             return tmp.item;
         } else {
             return null;
@@ -76,9 +69,10 @@ public class LinkedListDeque<T> {
 
     public T removeLast() {
         if (!isEmpty()) {
-            --size;
+            size--;
             Node tmp = sentinel.prev;
             sentinel.prev = tmp.prev;
+            sentinel.prev.next = sentinel;
             return tmp.item;
         } else {
             return null;

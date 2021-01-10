@@ -13,18 +13,18 @@ public class ArrayDeque<T> {
         return head == tail;
     }
 
-    public boolean isFull() {
+    private boolean isFull() {
         return (tail + 1) % capacity == head;
     }
 
-    public void increaseCapacity() {
+    private void increaseCapacity() {
         T[] newArray = (T[]) new Object[capacity * 2];
         System.arraycopy(array, 0, newArray, 0, capacity);
         capacity = capacity * 2;
         array = newArray;
     }
 
-    public void decreaseCapacity() {
+    private void decreaseCapacity() {
         T[] newArray = (T[]) new Object[capacity / 2];
         if (head < tail) {
             System.arraycopy(array, head, newArray, 0, tail - head + 1);
@@ -62,7 +62,7 @@ public class ArrayDeque<T> {
         }
     }
 
-    boolean isLess() {
+    private boolean isLess() {
         int a = head, b = tail;
         if (b < a) {
             b += capacity;
