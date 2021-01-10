@@ -112,14 +112,17 @@ public class ArrayDeque<T> {
 
 
     public T get(int index) {
-        if ((index + head + 1) < 0 || (index + head + 1) > tail) {
+        int pos = (index + head + 1) % capacity;
+        if (pos < 0 || pos > tail) {
             return null;
         }
-        return array[head + 1 + index];
+        return array[pos];
     }
 
     public int size() {
-        if (tail > head) {
+        if (isEmpty()) {
+            return 0;
+        } else if (tail > head) {
             return tail - head;
         }
         return tail - head + capacity;
