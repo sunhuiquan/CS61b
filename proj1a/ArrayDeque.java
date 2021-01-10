@@ -103,7 +103,7 @@ public class ArrayDeque<T> {
             return null;
         }
         T tmp = array[tail];
-        tail = (tail - 1) % capacity;
+        tail = (tail - 1 + capacity) % capacity;
         if (isLess()) {
             decreaseCapacity();
         }
