@@ -1,3 +1,6 @@
+import org.junit.Assert;
+import org.junit.Test;
+
 /**
  * Performs some basic linked list tests.
  */
@@ -85,8 +88,28 @@ public class ArrayDequeTest {
         printTestStatus(passed);
     }
 
+    @Test
+    public static void addGenericTest() {
+        LinkedListDeque<Integer> lld = new LinkedListDeque<>();
+        for (int i = 0; i < 10; i++) {
+            lld.addLast(i);
+        }
+        for (int i = 0; i < 2; i++) {
+            lld.removeFirst();
+        }
+        for (int i = 0; i < 3; i++) {
+            lld.removeLast();
+        }
+        for (int i = 0; i < 2; i++) {
+            lld.removeFirst();
+        }
+        Assert.assertEquals(4, (int) lld.getRecursive(0));
+        Assert.assertEquals(6, (int) lld.getRecursive(2));
+    }
+
     public static void main(String[] args) {
         System.out.println("Running tests.\n");
+        addGenericTest();
         addIsEmptySizeTest();
         addRemoveTest();
     }
