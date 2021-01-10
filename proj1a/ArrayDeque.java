@@ -97,6 +97,12 @@ public class ArrayDeque<T> {
         return null;
     }
 
+    public int size() {
+        if (tail > head)
+            return tail - head;
+        return tail - head + capacity;
+    }
+
     public void printDeque() {
         for (int i = (head + 1) % capacity; i != tail; i = (i + 1) % capacity) {
             System.out.print(array[i] + " ");
