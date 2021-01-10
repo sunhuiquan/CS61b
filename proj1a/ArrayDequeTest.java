@@ -90,27 +90,28 @@ public class ArrayDequeTest {
 
     @Test
     public static void addGenericTest() {
-        LinkedListDeque<Integer> lld = new LinkedListDeque<>();
+        ArrayDeque<Integer> ad = new ArrayDeque<>();
         for (int i = 0; i < 10; i++) {
-            lld.addLast(i);
+            ad.addLast(i);
         }
         for (int i = 0; i < 2; i++) {
-            lld.removeFirst();
+            ad.removeFirst();
         }
         for (int i = 0; i < 3; i++) {
-            lld.removeLast();
+            ad.removeLast();
         }
         for (int i = 0; i < 2; i++) {
-            lld.removeFirst();
+            ad.removeFirst();
         }
-        Assert.assertEquals(4, (int) lld.getRecursive(0));
-        Assert.assertEquals(6, (int) lld.getRecursive(2));
+        Assert.assertEquals(4, (int) ad.get(0));
+        Assert.assertEquals(6, (int) ad.get(2));
+        Assert.assertEquals(3, ad.size());
     }
 
     public static void main(String[] args) {
         System.out.println("Running tests.\n");
         addGenericTest();
-        addIsEmptySizeTest();
-        addRemoveTest();
+//        addIsEmptySizeTest();
+//        addRemoveTest();
     }
 }

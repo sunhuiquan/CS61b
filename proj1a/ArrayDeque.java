@@ -19,17 +19,29 @@ public class ArrayDeque<T> {
 
     private void increaseCapacity() {
         T[] newArray = (T[]) new Object[capacity * 2];
-        System.arraycopy(array, 0, newArray, 0, capacity);
-        capacity = capacity * 2;
+        if (head < tail) {
+            int size = tail - head;
+            System.arraycopy(array, head, newArray, 0, size + 1);
+            head = 0;
+            tail = size;
+        } else if (head > tail) {
+            int size = tail + capacity - head;
+            System.arraycopy(array, head, newArray, 0, capacity - head);
+            System.arraycopy(array, 0, newArray, capacity - head, size - (capacity - head) + 1);
+            head = 0;
+            tail = size;
+        }
+        capacity *= 2;
         array = newArray;
     }
 
     private void decreaseCapacity() {
         T[] newArray = (T[]) new Object[capacity / 2];
         if (head < tail) {
-            System.arraycopy(array, head, newArray, 0, tail - head + 1);
+            int size = tail - head;
+            System.arraycopy(array, head, newArray, 0, size + 1);
             head = 0;
-            tail -= head;
+            tail = size;
         } else if (head > tail) {
             int size = tail + capacity - head;
             System.arraycopy(array, head, newArray, 0, capacity - head);
@@ -39,6 +51,7 @@ public class ArrayDeque<T> {
         } else {
             head = tail = 0;
         }
+        capacity /= 2;
         array = newArray;
     }
 
@@ -55,7 +68,7 @@ public class ArrayDeque<T> {
     public void addLast(T item) {
         if (isFull()) {
             increaseCapacity();
-            addFirst(item);
+            addLast(item);
         } else {
             tail = (tail + 1 + capacity) % capacity;
             array[tail] = item;
@@ -93,10 +106,10 @@ public class ArrayDeque<T> {
 
 
     public T get(int index) {
-        if (index > head && index <= tail) {
-            return array[index];
+        if ((index + head + 1) < 0 || (index + head + 1) > tail) {
+            return null;
         }
-        return null;
+        return array[head + 1 + index];
     }
 
     public int size() {
