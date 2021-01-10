@@ -14,7 +14,7 @@ public class ArrayDeque<T> {
     }
 
     public boolean isFull() {
-        return (head + 1) % capacity == tail;
+        return (tail + 1) % capacity == head;
     }
 
     public void increaseCapacity() {
@@ -57,17 +57,19 @@ public class ArrayDeque<T> {
             increaseCapacity();
             addFirst(item);
         } else {
-            tail = (tail - 1 + capacity) % capacity;
+            tail = (tail + 1 + capacity) % capacity;
             array[tail] = item;
         }
     }
 
     boolean isLess() {
         int a = head, b = tail;
-        if (b < a)
+        if (b < a) {
             b += capacity;
-        if (b - a < 0.25 * capacity)
+        }
+        if (b - a < 0.25 * capacity) {
             return true;
+        }
         return false;
     }
 
@@ -82,7 +84,7 @@ public class ArrayDeque<T> {
 
     public T removeLast() {
         T tmp = array[tail];
-        tail = (tail + 1) % capacity;
+        tail = (tail - 1) % capacity;
         if (isLess()) {
             decreaseCapacity();
         }
@@ -98,8 +100,9 @@ public class ArrayDeque<T> {
     }
 
     public int size() {
-        if (tail > head)
+        if (tail > head) {
             return tail - head;
+        }
         return tail - head + capacity;
     }
 
