@@ -1,5 +1,5 @@
 public class LinkedListDeque<T> {
-    public class Node {
+    private class Node {
         T item;
         Node prev, next;
 
@@ -10,8 +10,8 @@ public class LinkedListDeque<T> {
         }
     }
 
-    public Node sentinel;
-    int size;
+    private Node sentinel;
+    private int size;
 
     /**
      * Creates an empty linked list deque.
@@ -30,6 +30,7 @@ public class LinkedListDeque<T> {
             sentinel.prev = newNode;
         } else {
             Node newNode = new Node(sentinel, sentinel.next, item);
+            sentinel.next.prev = newNode;
             sentinel.next = newNode;
         }
         size++;
@@ -42,6 +43,7 @@ public class LinkedListDeque<T> {
             sentinel.prev = newNode;
         } else {
             Node newNode = new Node(sentinel, sentinel.next, item);
+            sentinel.prev.next = newNode;
             sentinel.prev = newNode;
         }
         size++;
@@ -94,7 +96,7 @@ public class LinkedListDeque<T> {
         return null;
     }
 
-    public T getRecursive(int index, Node node) {
+    private T getRecursive(int index, Node node) {
         if (index == 0) {
             return node.item;
         }
@@ -110,6 +112,4 @@ public class LinkedListDeque<T> {
         }
         return null;
     }
-
-
 }

@@ -1,7 +1,7 @@
 public class ArrayDeque<T> {
-    T[] array;
-    int head, tail;
-    int capacity;
+    private T[] array;
+    private int head, tail;
+    private int capacity;
 
     public ArrayDeque() {
         capacity = 8;
