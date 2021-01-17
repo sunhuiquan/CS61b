@@ -37,7 +37,7 @@ public class Palindrome {
         if (!cc.equalChars(charDeque.removeFirst(), charDeque.removeLast())) {
             return false;
         }
-        return isPalindromeRecursive(charDeque);
+        return isPalindromeRecursive(charDeque, cc);
     }
 
     public boolean isPalindrome(String word, CharacterComparator cc) {

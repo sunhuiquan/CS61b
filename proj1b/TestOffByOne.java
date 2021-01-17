@@ -10,9 +10,8 @@ public class TestOffByOne {
 
     @Test
     public void testOffByOne() {
-        assertTrue(offByOne.equalChars('a', 'a'));
-        assertTrue(offByOne.equalChars('\n', '\n'));
-        assertTrue(offByOne.equalChars('5', '5'));
+        assertTrue(offByOne.equalChars('a', 'b'));
+        assertTrue(offByOne.equalChars('5', '4'));
         assertFalse(offByOne.equalChars('a', '!'));
     }
 
@@ -20,10 +19,10 @@ public class TestOffByOne {
     public void testIsPalindrome() {
         assertTrue(palindrome.isPalindrome("", offByOne));
         assertTrue(palindrome.isPalindrome("A", offByOne));
-        assertTrue(palindrome.isPalindrome("asdffdsa", offByOne));
-        assertTrue(palindrome.isPalindrome("aba", offByOne));
+        assertTrue(palindrome.isPalindrome("adfeb", offByOne));
+        assertTrue(palindrome.isPalindrome("abb", offByOne));
         assertFalse(palindrome.isPalindrome("adslgjljajge", offByOne));
-        assertFalse(palindrome.isPalindrome("abccb", offByOne));
+        assertTrue(palindrome.isPalindrome("abcab", offByOne));
         assertTrue(palindrome.isPalindrome(null));
     }
 }
