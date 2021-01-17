@@ -30,7 +30,21 @@ public class Palindrome {
         return isPalindromeRecursive(charDeque);
     }
 
+    private boolean isPalindromeRecursive(Deque<Character> charDeque, CharacterComparator cc) {
+        if (charDeque.size() <= 1) {
+            return true;
+        }
+        if (!cc.equalChars(charDeque.removeFirst(), charDeque.removeLast())) {
+            return false;
+        }
+        return isPalindromeRecursive(charDeque);
+    }
+
     public boolean isPalindrome(String word, CharacterComparator cc) {
-        return true;
+        if (word == null) {
+            return true;
+        }
+        Deque<Character> charDeque = wordToDeque(word);
+        return isPalindromeRecursive(charDeque, cc);
     }
 }

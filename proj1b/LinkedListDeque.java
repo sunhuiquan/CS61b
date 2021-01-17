@@ -3,7 +3,7 @@ public class LinkedListDeque<T> implements Deque<T> {
         T item;
         Node prev, next;
 
-        public Node(Node prev, Node next, T item) {
+        Node(Node prev, Node next, T item) {
             this.prev = prev;
             this.next = next;
             this.item = item;
