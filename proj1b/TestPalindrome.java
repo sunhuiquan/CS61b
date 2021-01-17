@@ -20,11 +20,9 @@ public class TestPalindrome {
     @Test
     public void testIsPalindrome() {
         assertTrue(palindrome.isPalindrome(""));
-        assertTrue(palindrome.isPalindrome("A"));
         assertTrue(palindrome.isPalindrome("asdffdsa"));
         assertTrue(palindrome.isPalindrome("aba"));
         assertFalse(palindrome.isPalindrome("adslgjljajge"));
         assertFalse(palindrome.isPalindrome("abccb"));
-        assertTrue(palindrome.isPalindrome(null));
     }
 }
