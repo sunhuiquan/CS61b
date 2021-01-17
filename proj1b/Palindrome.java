@@ -16,7 +16,9 @@ public class Palindrome {
         if (charDeque.size() <= 1) {
             return true;
         }
-        if (!charDeque.removeFirst().equals(charDeque.removeLast())) {
+        Character a = Character.toLowerCase(charDeque.removeFirst());
+        Character b = Character.toLowerCase(charDeque.removeLast());
+        if (!a.equals(b)) {
             return false;
         }
         return isPalindromeRecursive(charDeque);
