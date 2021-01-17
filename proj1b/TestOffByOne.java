@@ -24,11 +24,4 @@ public class TestOffByOne {
         assertFalse(palindrome.isPalindrome("adslgjljajge", offByOne));
         assertTrue(palindrome.isPalindrome("abcab", offByOne));
     }
-
-    @Test
-    public void testSome() {
-        char c = '!';
-        c = Character.toLowerCase(c);
-        assertEquals('!', c);
-    }
 }
