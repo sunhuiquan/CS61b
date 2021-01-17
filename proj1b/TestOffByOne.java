@@ -20,9 +20,8 @@ public class TestOffByOne {
         assertTrue(palindrome.isPalindrome("", offByOne));
         assertTrue(palindrome.isPalindrome("A", offByOne));
         assertTrue(palindrome.isPalindrome("adfeb", offByOne));
-        assertTrue(palindrome.isPalindrome("abb", offByOne));
+        assertFalse(palindrome.isPalindrome("aba", offByOne));
         assertFalse(palindrome.isPalindrome("adslgjljajge", offByOne));
         assertTrue(palindrome.isPalindrome("abcab", offByOne));
-        assertTrue(palindrome.isPalindrome(null));
     }
 }

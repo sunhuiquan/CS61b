@@ -1,10 +1,10 @@
 //  A class for off-by-N comparators.
 public class OffByN implements CharacterComparator {
-    private int n;
-
     public OffByN(int N) {
         n = N;
     }
+
+    private int n;
 
     @Override
     public boolean equalChars(char x, char y) {
