@@ -6,4 +6,6 @@
 - pro 0 <br>  
 - lab 3 <br>  
 - pro 1A<br>  
+- pro 1G<br>  
+
 
