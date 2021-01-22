@@ -1,15 +1,22 @@
-public class OffByN implements CharacterComparator {
+/**
+ * @ClassName OffByN
+ * @Description TODO
+ * @Author Yixiang Zhao
+ * @Date 2018/7/28 20:54
+ * @Version 1.0
+ */
+public class OffByN implements CharacterComparator{
 
     private int N;
 
-    public OffByN(int n) {
-        N = n;
+    public OffByN(int N) {
+        this.N = N;
     }
 
     @Override
     public boolean equalChars(char x, char y) {
         int diff = x - y;
-        return diff == N || diff == -N;
+        return Math.abs(diff) == N ? true : false;
     }
 
 }

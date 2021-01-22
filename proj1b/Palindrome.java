@@ -1,44 +1,48 @@
+/**
+ * @ClassName Palindrome
+ * @Description TODO
+ * @Author Yixiang Zhao
+ * @Date 2018/7/28 18:20
+ * @Version 1.0
+ */
 public class Palindrome {
     public Deque<Character> wordToDeque(String word) {
         Deque<Character> res = new ArrayDeque<>();
-        for (int i = 0; i < word.length(); i++) {
+        for (int i=0; i<word.length(); i++) {
             res.addLast(word.charAt(i));
         }
         return res;
     }
 
     public boolean isPalindrome(String word) {
-        Deque<Character> d = wordToDeque(word);
-        while (d.size() > 1) {
-            if (d.removeFirst() != d.removeLast()) {
-                return false;
-            }
+        Deque d = wordToDeque(word);
+        return isPalindromeHelper(d);
+    }
+
+    private boolean isPalindromeHelper(Deque d) {
+        if (d.size() <= 1) {
+            return true;
+        } else if (d.removeFirst() != d.removeLast()) {
+            return false;
+        } else {
+            return isPalindromeHelper(d);
         }
-        return true;
     }
 
     public boolean isPalindrome(String word, CharacterComparator cc) {
-        Deque<Character> d = wordToDeque(word);
-        while (d.size() > 1) {
-            if (!cc.equalChars(d.removeFirst(), d.removeLast())) {
-                return false;
-            }
-        }
-        return true;
+        Deque d = wordToDeque(word);
+        return isPalindromeHelper(d, cc);
     }
 
-    // public boolean isPalindromeRecursive(String word) {
-    //     Deque<Character> d = wordToDeque(word);
-    //     return isPalindromeRecursive(d);
-    // }
+    private boolean isPalindromeHelper(Deque d, CharacterComparator cc) {
+        if (d.size() <= 1) {
+            return true;
+        } else if (!cc.equalChars((char)d.removeFirst(), (char)d.removeLast())) {
+            return false;
+        } else {
+            return isPalindromeHelper(d, cc);
+        }
+    }
 
-    // private boolean isPalindromeRecursive(Deque<Character> d) {
-    //     if (d.size() <= 1) {
-    //         return true;
-    //     }
-    //     if (d.removeFirst() != d.removeLast()) {
-    //         return false;
-    //     }
-    //     return isPalindromeRecursive(d);
-    // }
+
 }
