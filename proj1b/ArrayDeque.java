@@ -1,144 +1,159 @@
+/**
+ * Deque implemented by array.
+ */
 public class ArrayDeque<T> implements Deque<T> {
-    private T[] array;
-    private int head, tail;
-    private int capacity;
+
+    private T[] items;
+    private int left;
+    private int right;
+    private int capacity = 8;
 
     public ArrayDeque() {
-        capacity = 8;
-        array = (T[]) new Object[capacity];
-        head = tail = 0;
+        items = (T[]) new Object[capacity];
+        left = right = 0;
     }
 
-    @Override
-    public boolean isEmpty() {
-        return head == tail;
-    }
-
-    private boolean isFull() {
-        return (tail + 1) % capacity == head;
-    }
-
-    private void increaseCapacity() {
-        T[] newArray = (T[]) new Object[capacity * 2];
-        if (head < tail) {
-            int size = tail - head;
-            System.arraycopy(array, head, newArray, 0, size + 1);
-            head = 0;
-            tail = size;
-        } else if (head > tail) {
-            int size = tail + capacity - head;
-            System.arraycopy(array, head, newArray, 0, capacity - head);
-            System.arraycopy(array, 0, newArray, capacity - head, size - (capacity - head) + 1);
-            head = 0;
-            tail = size;
-        }
-        capacity *= 2;
-        array = newArray;
-    }
-
-    private void decreaseCapacity() {
-        T[] newArray = (T[]) new Object[capacity / 2];
-        if (head < tail) {
-            int size = tail - head;
-            System.arraycopy(array, head, newArray, 0, size + 1);
-            head = 0;
-            tail = size;
-        } else if (head > tail) {
-            int size = tail + capacity - head;
-            System.arraycopy(array, head, newArray, 0, capacity - head);
-            System.arraycopy(array, 0, newArray, capacity - head, size - (capacity - head) + 1);
-            head = 0;
-            tail = size;
-        } else {
-            head = tail = 0;
-        }
-        capacity /= 2;
-        array = newArray;
-    }
-
+    /** Adds an item of type T to the front of the deque. */
     @Override
     public void addFirst(T item) {
         if (isFull()) {
-            increaseCapacity();
-            addFirst(item);
-        } else {
-            array[head] = item;
-            head = (head - 1 + capacity) % capacity;
+            resize((int) (capacity * 1.5));
         }
+        left = (left - 1 + capacity) % capacity;
+        items[left] = item;
     }
 
+    /** Adds an item of type T to the back of the deque. */
     @Override
     public void addLast(T item) {
         if (isFull()) {
-            increaseCapacity();
-            addLast(item);
-        } else {
-            tail = (tail + 1 + capacity) % capacity;
-            array[tail] = item;
+            resize((int) (capacity * 1.5));
+        }
+        items[right] = item;
+        right = (right + 1 + capacity) % capacity;
+    }
+
+    /** Returns true if deque is empty, false otherwise. */
+    @Override
+    public boolean isEmpty() {
+        return left == right;
+    }
+
+    /** Returns the number of items in the deque. */
+    @Override
+    public int size() {
+        return (right - left + capacity) % capacity;
+    }
+
+    /** Prints the items in the deque from first to last, separated by a space. */
+    @Override
+    public void printDeque() {
+        if (left < right) {
+            for (int i = left; i < right; i++) {
+                if (i == right - 1) {
+                    System.out.println(items[i]);
+                    break;
+                }
+                System.out.print(items[i] + " ");
+            }
+        } else if (left > right) {
+            for (int i = left; i < capacity; i++) {
+                System.out.print(items[i] + " ");
+            }
+            for (int i = 0; i < right; i++) {
+                if (i == right - 1) {
+                    System.out.println(items[i]);
+                    break;
+                }
+                System.out.print(items[i] + " ");
+            }
         }
     }
 
-    private boolean isLess() {
-        int a = head, b = tail;
-        if (b < a) {
-            b += capacity;
-        }
-        if (b - a < 0.25 * capacity) {
-            return true;
-        }
-        return false;
-    }
-
+    /**
+     * Removes and returns the item at the front of the deque. If no such item
+     * exists, returns null.
+     */
     @Override
     public T removeFirst() {
         if (isEmpty()) {
             return null;
         }
-        head = (head + 1) % capacity;
-        T tmp = array[head];
-        if (isLess()) {
-            decreaseCapacity();
+        T res = items[left];
+        left = (left + 1) % capacity;
+        if (isLowUsageRate()) {
+            resize((int) (capacity * 0.5));
         }
-        return tmp;
+        return res;
     }
 
+    /**
+     * Removes and returns the item at the back of the deque. If no such item
+     * exists, returns null.
+     */
     @Override
     public T removeLast() {
         if (isEmpty()) {
             return null;
         }
-        T tmp = array[tail];
-        tail = (tail - 1 + capacity) % capacity;
-        if (isLess()) {
-            decreaseCapacity();
+        right = (right - 1 + capacity) % capacity;
+        T res = items[right];
+        if (isLowUsageRate()) {
+            resize((int) (capacity * 0.5));
         }
-        return tmp;
+        return res;
     }
 
+    /**
+     * Gets the item at the given index, where 0 is the front, 1 is the next item,
+     * and so forth. If no such item exists, returns null. Must not alter the deque!
+     */
     @Override
     public T get(int index) {
-        int pos = (index + head + 1) % capacity;
         if (index < 0 || index >= size() || isEmpty()) {
             return null;
         }
-        return array[pos];
+        if (left < right) {
+            return items[index + left];
+        } else if (left > right) {
+            if (index + left < capacity) {
+                return items[index + left];
+            } else {
+                return items[(index + left) % capacity];
+            }
+        }
+        return null;
     }
 
-    @Override
-    public int size() {
-        if (isEmpty()) {
-            return 0;
-        } else if (tail > head) {
-            return tail - head;
-        }
-        return tail - head + capacity;
+    private boolean isFull() {
+        return size() == capacity - 1;
     }
 
-    @Override
-    public void printDeque() {
-        for (int i = (head + 1) % capacity; i != tail; i = (i + 1) % capacity) {
-            System.out.print(array[i] + " ");
-        }
-        System.out.print(array[tail] + "\n");
+    private boolean isLowUsageRate() {
+        return capacity >= 16 && size() / (double) capacity < 0.25;
     }
+
+    private void resize(int newSize) {
+        T[] newArray = (T[]) new Object[newSize];
+
+        int size = size();
+        if (left < right) {
+            for (int i = left, j = 0; i < right && j < size; i++, j++) {
+                newArray[j] = items[i];
+            }
+        } else if (left > right) {
+            int j = 0;
+            for (int i = left; j < capacity - left; i++, j++) {
+                newArray[j] = items[i];
+            }
+            for (int i = 0; j < size; i++, j++) {
+                newArray[j] = items[i];
+            }
+        }
+        left = 0;
+        right = size;
+        items = newArray;
+        capacity = newSize;
+    }
+
 }

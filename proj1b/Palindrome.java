@@ -1,41 +1,44 @@
-// A class for palindrome operations.
 public class Palindrome {
     public Deque<Character> wordToDeque(String word) {
-        Deque<Character> charDeque = new LinkedListDeque<>();
-        int size = word.length();
-        for (int i = 0; i < size; i++) {
-            charDeque.addLast(word.charAt(i));
+        Deque<Character> res = new ArrayDeque<>();
+        for (int i = 0; i < word.length(); i++) {
+            res.addLast(word.charAt(i));
         }
-        return charDeque;
-    }
-
-    private boolean isPalindromeRecursive(Deque<Character> charDeque) {
-        if (charDeque.size() <= 1) {
-            return true;
-        }
-        if (!(charDeque.removeFirst() == charDeque.removeLast())) {
-            return false;
-        }
-        return isPalindromeRecursive(charDeque);
+        return res;
     }
 
     public boolean isPalindrome(String word) {
-        Deque<Character> charDeque = wordToDeque(word);
-        return isPalindromeRecursive(charDeque);
-    }
-
-    private boolean isPalindromeRecursive(Deque<Character> charDeque, CharacterComparator cc) {
-        if (charDeque.size() <= 1) {
-            return true;
+        Deque<Character> d = wordToDeque(word);
+        while (d.size() > 1) {
+            if (d.removeFirst() != d.removeLast()) {
+                return false;
+            }
         }
-        if (!cc.equalChars(charDeque.removeFirst(), charDeque.removeLast())) {
-            return false;
-        }
-        return isPalindromeRecursive(charDeque, cc);
+        return true;
     }
 
     public boolean isPalindrome(String word, CharacterComparator cc) {
-        Deque<Character> charDeque = wordToDeque(word);
-        return isPalindromeRecursive(charDeque, cc);
+        Deque<Character> d = wordToDeque(word);
+        while (d.size() > 1) {
+            if (!cc.equalChars(d.removeFirst(), d.removeLast())) {
+                return false;
+            }
+        }
+        return true;
     }
+
+    // public boolean isPalindromeRecursive(String word) {
+    //     Deque<Character> d = wordToDeque(word);
+    //     return isPalindromeRecursive(d);
+    // }
+
+    // private boolean isPalindromeRecursive(Deque<Character> d) {
+    //     if (d.size() <= 1) {
+    //         return true;
+    //     }
+    //     if (d.removeFirst() != d.removeLast()) {
+    //         return false;
+    //     }
+    //     return isPalindromeRecursive(d);
+    // }
 }
