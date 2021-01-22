@@ -1,44 +1,44 @@
-
+// A class for palindrome operations.
 public class Palindrome {
     public Deque<Character> wordToDeque(String word) {
-        ArrayDeque<Character> arrayDeque = new ArrayDeque<>();
-        for (int i = 0; i < word.length(); i++) {
-            Character theChar = word.charAt(i);
-            arrayDeque.addLast(theChar);
+        if (word == null) {
+            return null;
         }
+        Deque<Character> charDeque = new LinkedListDeque<>();
+        int size = word.length();
+        for (int i = 0; i < size; i++) {
+            charDeque.addLast(word.charAt(i));
+        }
+        return charDeque;
+    }
 
-        return arrayDeque;
+    private boolean isPalindromeRecursive(Deque<Character> charDeque) {
+        if (charDeque.size() <= 1) {
+            return true;
+        }
+        if (!(charDeque.removeFirst() == charDeque.removeLast())) {
+            return false;
+        }
+        return isPalindromeRecursive(charDeque);
     }
 
     public boolean isPalindrome(String word) {
-        Deque<Character> characterDeque = wordToDeque(word);
-        char front;
-        char back;
-
-        while (characterDeque.size() > 1) {
-            front = characterDeque.removeFirst();
-            back = characterDeque.removeLast();
-            if (front != back) {
-                return false;
-            }
-        }
-
-        return true;
+        Deque<Character> charDeque = wordToDeque(word);
+        return isPalindromeRecursive(charDeque);
     }
 
-    public boolean isPalindrome(String word, CharacterComparator cc){
-        Deque<Character> characterDeque = wordToDeque(word);
-        char front;
-        char back;
-
-        while(characterDeque.size() > 1){
-            front = characterDeque.removeFirst();
-            back = characterDeque.removeLast();
-            if (!cc.equalChars(front, back)){
-                return false;
-            }
+    private boolean isPalindromeRecursive(Deque<Character> charDeque, CharacterComparator cc) {
+        if (charDeque.size() <= 1) {
+            return true;
         }
-        return true;
+        if (!cc.equalChars(charDeque.removeFirst(), charDeque.removeLast())) {
+            return false;
+        }
+        return isPalindromeRecursive(charDeque, cc);
     }
 
+    public boolean isPalindrome(String word, CharacterComparator cc) {
+        Deque<Character> charDeque = wordToDeque(word);
+        return isPalindromeRecursive(charDeque, cc);
+    }
 }

@@ -1,13 +1,14 @@
+//  A class for off-by-N comparators.
 public class OffByN implements CharacterComparator {
-    private int n;
-
-    public OffByN(int n) {
-        this.n = n;
+    public OffByN(int N) {
+        n = N;
     }
+
+    private int n;
 
     @Override
     public boolean equalChars(char x, char y) {
-        if (Math.abs(x - y) == n){
+        if ((x - y == n) || (y - x == n)) {
             return true;
         }
         return false;

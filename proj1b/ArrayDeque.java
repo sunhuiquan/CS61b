@@ -1,189 +1,144 @@
-
-public class ArrayDeque<T> implements Deque<T>{
-    private T[] items;
-    private int nextFirst;
-    private int nextLast;
-    private int size;
-
-    private static final int INITIAL_CAPACITY = 8;
-    private static final int RFACTOR = 2;
+public class ArrayDeque<T> implements Deque<T> {
+    private T[] array;
+    private int head, tail;
+    private int capacity;
 
     public ArrayDeque() {
-        items = (T[]) new Object[INITIAL_CAPACITY];
-        nextFirst = 0;
-        nextLast = 1;
-        size = 0;
+        capacity = 8;
+        array = (T[]) new Object[capacity];
+        head = tail = 0;
     }
 
-    private void calculateFront() {
-        nextFirst = (nextFirst + items.length - 1) % (items.length);
-    }
-
-    private void calculateLast() {
-        nextLast = (nextLast + 1) % items.length;
-    }
-
-    private int respect(int index, int length) {
-        return index % length;
-    }
-
-    private int plusOne(int index) {
-        return (index + 1) % items.length;
-    }
-
-    private int plusOne(int index, int length) {
-        return (index + 1) % length;
-    }
-
-
-    private int minusOne(int index) {
-        return (index + items.length - 1) % items.length;
-    }
-
-    private int minusOne(int index, int length) {
-        return (index + length - 1) % length;
+    @Override
+    public boolean isEmpty() {
+        return head == tail;
     }
 
     private boolean isFull() {
-        return items.length == size;
+        return (tail + 1) % capacity == head;
     }
 
-    private void extend() {
-        reSize(size, RFACTOR * size);
-    }
-
-    private void shrink() {
-        reSize(items.length, items.length / RFACTOR);
-    }
-
-    private boolean checkLarger(int f, int l) {
-        return f > l;
-    }
-
-    private void reSize(int inputSize, int capacity) {
-        T[] a = (T[]) new Object[capacity];
-
-        if (capacity < inputSize) {
-            int start = Math.min(nextFirst, nextLast);
-            int first = nextFirst;
-            int p = respect(start, capacity);
-            if (!checkLarger(nextFirst, nextLast)) {
-                for (int i = 0; i < capacity; i++) {
-                    a[i] = items[start];
-                    start = plusOne(start);
-                }
-                nextFirst = 0;
-                nextLast = capacity / 2;
-            } else {
-                for (int i = 0; i < capacity; i++) {
-                    start = minusOne(start, items.length);
-                    p = minusOne(p, capacity);
-                    a[p] = items[start];
-
-                }
-                nextFirst = respect(first, capacity);
-                System.out.println();
-            }
-        } else {
-            if (nextFirst == items.length - 1) {
-                int temp = minusOne(nextLast);
-                System.arraycopy(items, 0, a, 0, nextFirst + 1);
-                nextFirst = a.length - 1;
-                nextLast = temp + 1;
-            } else {
-                System.arraycopy(items, 0, a, 0, nextLast);
-                System.arraycopy(items, nextLast, a, size + nextFirst + 1, size - nextLast);
-                nextFirst = size + nextFirst;
-            }
+    private void increaseCapacity() {
+        T[] newArray = (T[]) new Object[capacity * 2];
+        if (head < tail) {
+            int size = tail - head;
+            System.arraycopy(array, head, newArray, 0, size + 1);
+            head = 0;
+            tail = size;
+        } else if (head > tail) {
+            int size = tail + capacity - head;
+            System.arraycopy(array, head, newArray, 0, capacity - head);
+            System.arraycopy(array, 0, newArray, capacity - head, size - (capacity - head) + 1);
+            head = 0;
+            tail = size;
         }
-        items = a;
-        System.out.println();
+        capacity *= 2;
+        array = newArray;
+    }
 
+    private void decreaseCapacity() {
+        T[] newArray = (T[]) new Object[capacity / 2];
+        if (head < tail) {
+            int size = tail - head;
+            System.arraycopy(array, head, newArray, 0, size + 1);
+            head = 0;
+            tail = size;
+        } else if (head > tail) {
+            int size = tail + capacity - head;
+            System.arraycopy(array, head, newArray, 0, capacity - head);
+            System.arraycopy(array, 0, newArray, capacity - head, size - (capacity - head) + 1);
+            head = 0;
+            tail = size;
+        } else {
+            head = tail = 0;
+        }
+        capacity /= 2;
+        array = newArray;
     }
 
     @Override
     public void addFirst(T item) {
         if (isFull()) {
-            extend();
+            increaseCapacity();
+            addFirst(item);
+        } else {
+            array[head] = item;
+            head = (head - 1 + capacity) % capacity;
         }
-
-        items[nextFirst] = item;
-        calculateFront();
-        size++;
     }
 
     @Override
     public void addLast(T item) {
         if (isFull()) {
-            extend();
+            increaseCapacity();
+            addLast(item);
+        } else {
+            tail = (tail + 1 + capacity) % capacity;
+            array[tail] = item;
         }
-        items[nextLast] = item;
-        calculateLast();
-        size++;
     }
 
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    private boolean isSparse() {
-        return items.length >= 16 && size() < items.length / 4;
+    private boolean isLess() {
+        int a = head, b = tail;
+        if (b < a) {
+            b += capacity;
+        }
+        if (b - a < 0.25 * capacity) {
+            return true;
+        }
+        return false;
     }
 
     @Override
     public T removeFirst() {
-        if (isSparse()) {
-            shrink();
+        if (isEmpty()) {
+            return null;
         }
-        nextFirst = plusOne(nextFirst);
-        T returnItem = items[nextFirst];
-        items[nextFirst] = null;
-        size--;
-        if (size < 0) {
-            size = 0;
+        head = (head + 1) % capacity;
+        T tmp = array[head];
+        if (isLess()) {
+            decreaseCapacity();
         }
-        return returnItem;
+        return tmp;
     }
 
     @Override
     public T removeLast() {
-        if (isSparse()) {
-            shrink();
+        if (isEmpty()) {
+            return null;
         }
-        nextLast = minusOne(nextLast);
-        T returnItem = items[nextLast];
-        items[nextLast] = null;
-        size--;
-        if (size < 0) {
-            size = 0;
+        T tmp = array[tail];
+        tail = (tail - 1 + capacity) % capacity;
+        if (isLess()) {
+            decreaseCapacity();
         }
-        return returnItem;
-    }
-
-
-    @Override
-    public void printDeque() {
-        for (int i = 0; i < items.length; i++) {
-            T item = get(i);
-            if (item == null) {
-                System.out.println();
-                return;
-            }
-            System.out.print(item);
-            System.out.print(" ");
-        }
+        return tmp;
     }
 
     @Override
     public T get(int index) {
-        return items[(nextFirst + 1 + index) % items.length];
+        int pos = (index + head + 1) % capacity;
+        if (index < 0 || index >= size() || isEmpty()) {
+            return null;
+        }
+        return array[pos];
     }
 
+    @Override
+    public int size() {
+        if (isEmpty()) {
+            return 0;
+        } else if (tail > head) {
+            return tail - head;
+        }
+        return tail - head + capacity;
+    }
 
+    @Override
+    public void printDeque() {
+        for (int i = (head + 1) % capacity; i != tail; i = (i + 1) % capacity) {
+            System.out.print(array[i] + " ");
+        }
+        System.out.print(array[tail] + "\n");
+    }
 }

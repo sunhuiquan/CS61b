@@ -1,10 +1,7 @@
-public class OffByOne implements CharacterComparator{
+// A class for off-by-1 comparators.
+public class OffByOne implements CharacterComparator {
     @Override
     public boolean equalChars(char x, char y) {
-        if (x == y + 1 || x == y -1) {
-            return true;
-        }
-        return false;
+        return (x - y == 1) || (y - x == 1);
     }
-
 }

@@ -1,24 +1,17 @@
-import java.util.ArrayList;
-
 /**
  * This class outputs all palindromes in the words file in the current directory.
  */
 public class PalindromeFinder {
     public static void main(String[] args) {
         int minLength = 4;
-        In in = new In("words.txt");
+        In in = new In("../library-sp18/data/words.txt");
         Palindrome palindrome = new Palindrome();
-        ArrayList<String> wordsList = new ArrayList<>();
 
         while (!in.isEmpty()) {
             String word = in.readString();
-            if (word.length() >= minLength && palindrome.isPalindrome(word, new OffByOne())) {
-                wordsList.add(word);
+            if (word.length() >= minLength && palindrome.isPalindrome(word)) {
+                System.out.println(word);
             }
-        }
-
-        for (String s : wordsList) {
-            System.out.println(s);
         }
     }
 }
