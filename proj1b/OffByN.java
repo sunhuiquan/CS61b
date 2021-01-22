@@ -1,22 +1,16 @@
-/**
- * @ClassName OffByN
- * @Description TODO
- * @Author Yixiang Zhao
- * @Date 2018/7/28 20:54
- * @Version 1.0
- */
-public class OffByN implements CharacterComparator{
-
-    private int N;
-
+//  A class for off-by-N comparators.
+public class OffByN implements CharacterComparator {
     public OffByN(int N) {
-        this.N = N;
+        n = N;
     }
+
+    private int n;
 
     @Override
     public boolean equalChars(char x, char y) {
-        int diff = x - y;
-        return Math.abs(diff) == N ? true : false;
+        if ((x - y == n) || (y - x == n)) {
+            return true;
+        }
+        return false;
     }
-
 }

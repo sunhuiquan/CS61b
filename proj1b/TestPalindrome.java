@@ -1,5 +1,5 @@
-import org.junit.Assert;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 public class TestPalindrome {
@@ -15,31 +15,14 @@ public class TestPalindrome {
             actual += d.removeFirst();
         }
         assertEquals("persiflage", actual);
-    } // Uncomment this class once you've created your Palindrome class.
+    }
 
     @Test
     public void testIsPalindrome() {
-        assertTrue(palindrome.isPalindrome("ioi"));
-        assertFalse(palindrome.isPalindrome("cat"));
         assertTrue(palindrome.isPalindrome(""));
-        assertTrue(palindrome.isPalindrome("&"));
-    }
-
-    @Test
-    public void testPalindrome() {
-        OffByOne offByOne = new OffByOne();
-        assertTrue(palindrome.isPalindrome("flake", offByOne));
-        assertFalse(palindrome.isPalindrome("aaabbbaaa", offByOne));
-        assertTrue(palindrome.isPalindrome("", offByOne));
-        assertTrue(palindrome.isPalindrome("&", offByOne));
-    }
-
-    @Test
-    public void testPalindromeByN() {
-        OffByN offByN = new OffByN(6);
-        assertTrue(palindrome.isPalindrome("gmdjgm", offByN));
-        assertFalse(palindrome.isPalindrome("aaabbbaa", offByN));
-        assertTrue(palindrome.isPalindrome("", offByN));
-        assertTrue(palindrome.isPalindrome("&", offByN));
+        assertTrue(palindrome.isPalindrome("asdffdsa"));
+        assertTrue(palindrome.isPalindrome("aba"));
+        assertFalse(palindrome.isPalindrome("adslgjljajge"));
+        assertFalse(palindrome.isPalindrome("abccb"));
     }
 }

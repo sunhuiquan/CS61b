@@ -1,23 +1,22 @@
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.*;
 
-/**
- * @ClassName TestOffByN
- * @Description TODO
- * @Author Yixiang Zhao
- * @Date 2018/7/28 20:58
- * @Version 1.0
- */
 public class TestOffByN {
-    static CharacterComparator offByN;
+    static CharacterComparator offByN = new OffByN(5);
+    static Palindrome palindrome = new Palindrome();
 
     @Test
-    public void testEqualChars() {
-        offByN = new OffByN(3);
-        assertTrue(offByN.equalChars('a', 'd'));
-        assertTrue(offByN.equalChars('g', 'd'));
-        assertFalse(offByN.equalChars('a', 'a'));
+    public void testOffByN() {
+        assertTrue(offByN.equalChars('a', 'f'));
+        assertTrue(offByN.equalChars('f', 'a'));
+        assertFalse(offByN.equalChars('f', 'h'));
     }
+
+    @Test
+    public void testIsPalindrome() {
+        assertFalse(palindrome.isPalindrome("aa", offByN));
+        assertTrue(palindrome.isPalindrome("af", offByN));
+    }
+
 }
