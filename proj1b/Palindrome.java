@@ -1,9 +1,6 @@
 // A class for palindrome operations.
 public class Palindrome {
     public Deque<Character> wordToDeque(String word) {
-        if (word == null) {
-            return null;
-        }
         Deque<Character> charDeque = new LinkedListDeque<>();
         int size = word.length();
         for (int i = 0; i < size; i++) {
