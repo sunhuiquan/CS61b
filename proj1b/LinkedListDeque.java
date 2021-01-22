@@ -1,117 +1,136 @@
-public class LinkedListDeque<T> implements Deque<T> {
-    private class Node {
-        T item;
-        Node prev, next;
+public class LinkedListDeque<T> implements Deque<T>{
 
-        Node(Node prev, Node next, T item) {
-            this.prev = prev;
-            this.next = next;
-            this.item = item;
+    private class Node {
+        private Node pre;
+        private T item;
+        private Node next;
+
+        public Node(T i) {
+            pre = null;
+            item = i;
+            next = null;
+        }
+
+        public Node() {
+            pre = null;
+            item = null;
+            next = null;
         }
     }
 
     private Node sentinel;
     private int size;
 
-    /**
-     * Creates an empty linked list deque.
-     */
+    /* Creates an empty linked list deque. */
     public LinkedListDeque() {
-        sentinel = new Node(null, null, null);
-        sentinel.next = sentinel;
-        sentinel.prev = sentinel;
         size = 0;
+        sentinel = new Node();
+        sentinel.pre = sentinel;
+        sentinel.next = sentinel;
     }
 
     @Override
     public void addFirst(T item) {
-        Node newNode = new Node(sentinel, sentinel.next, item);
-        sentinel.next.prev = newNode;
-        sentinel.next = newNode;
         size++;
+        Node n = new Node(item);
+        sentinel.next.pre = n;
+        n.next = sentinel.next;
+        n.pre = sentinel;
+        sentinel.next = n;
     }
 
     @Override
     public void addLast(T item) {
-        Node newNode = new Node(sentinel.prev, sentinel, item);
-        sentinel.prev.next = newNode;
-        sentinel.prev = newNode;
         size++;
+        Node n = new Node(item);
+        n.pre = sentinel.pre;
+        n.next = sentinel;
+        sentinel.pre.next = n;
+        sentinel.pre = n;
     }
 
     @Override
     public boolean isEmpty() {
-        return size == 0;
+        return sentinel.next == sentinel;
     }
 
     @Override
     public int size() {
+        if (size <= 0) {
+            return 0;
+        }
         return size;
     }
 
     @Override
     public void printDeque() {
-        for (Node tmp = sentinel.next; tmp != sentinel; tmp = tmp.next) {
-            if (tmp.next == sentinel) {
-                System.out.print(tmp.item + "\n");
-                break;
-            }
-            System.out.print(tmp.item + " ");
+        Node p = sentinel;
+        while (p.next.next != sentinel) {
+            p = p.next;
+            System.out.print(p.item);
+            System.out.print(" ");
         }
+        System.out.println(p.next.item);
     }
 
     @Override
     public T removeFirst() {
-        if (!isEmpty()) {
-            size--;
-            Node tmp = sentinel.next;
-            sentinel.next = tmp.next;
-            sentinel.next.prev = sentinel;
-            return tmp.item;
-        } else {
+        if (sentinel.next == sentinel) {
             return null;
         }
+        T item = sentinel.next.item;
+        sentinel.next = sentinel.next.next;
+        sentinel.next.pre = sentinel;
+        size--;
+
+        return item;
     }
 
     @Override
     public T removeLast() {
-        if (!isEmpty()) {
-            size--;
-            Node tmp = sentinel.prev;
-            sentinel.prev = tmp.prev;
-            sentinel.prev.next = sentinel;
-            return tmp.item;
-        } else {
+        if (sentinel.next == sentinel) {
             return null;
         }
+        T item = sentinel.pre.item;
+        sentinel.pre.pre.next = sentinel;
+        sentinel.pre = sentinel.pre.pre;
+        size--;
+
+        return item;
     }
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index <= size - 1) {
-            Node tmp = sentinel.next;
-            for (int i = 0; i < index; i++) {
-                tmp = tmp.next;
-            }
-            return tmp.item;
+        if (index > size) {
+            return null;
         }
-        return null;
+        Node n = sentinel;
+        if (n.next == n) {
+            return null;
+        }
+        n = n.next;
+        for (int i = 0; i < index; i++) {
+            n = n.next;
+        }
+
+        return n.item;
     }
 
-    private T getRecursive(int index, Node node) {
-        if (index == 0) {
-            return node.item;
-        }
-        return getRecursive(index - 1, node.next);
-    }
 
-    /**
-     * Same as get, but uses recursion.
-     */
     public T getRecursive(int index) {
-        if (index >= 0 && index <= size - 1) {
-            return getRecursive(index, sentinel.next);
+        Node p = sentinel;
+        if (p.next == p) {
+            return null;
         }
-        return null;
+        return recursiveGet(p, index);
     }
+
+    private T recursiveGet(Node n, int index) {
+        if (index == 0) {
+            return n.next.item;
+        }
+        return recursiveGet(n.next, index - 1);
+    }
+
+
 }
