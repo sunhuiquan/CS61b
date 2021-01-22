@@ -1,16 +1,15 @@
-//  A class for off-by-N comparators.
 public class OffByN implements CharacterComparator {
-    public OffByN(int N) {
-        n = N;
-    }
 
-    private int n;
+    private int N;
+
+    public OffByN(int n) {
+        N = n;
+    }
 
     @Override
     public boolean equalChars(char x, char y) {
-        if ((x - y == n) || (y - x == n)) {
-            return true;
-        }
-        return false;
+        int diff = x - y;
+        return diff == N || diff == -N;
     }
+
 }
