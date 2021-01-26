@@ -78,7 +78,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
 
         @Override
         public boolean hasNext() {
-            return ptr != last;
+            return (ptr != last && isFull());
         }
 
         @Override

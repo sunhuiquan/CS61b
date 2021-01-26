@@ -23,13 +23,13 @@ public class TestArrayRingBuffer {
         arb.enqueue(7);
         arb.enqueue(8);
         arb.enqueue(9);
-        for (int i = 1; i < 10; i++) {
-            assertEquals(i, (int) arb.peek());
-            assertEquals(i, (int) arb.dequeue());
-        }
-//        for (int x : arb) {
-//            System.out.println(x);
+//        for (int i = 1; i < 10; i++) {
+//            assertEquals(i, (int) arb.peek());
+//            assertEquals(i, (int) arb.dequeue());
 //        }
+        for (int x : arb) {
+            System.out.println(x);
+        }
     }
 
     /**
