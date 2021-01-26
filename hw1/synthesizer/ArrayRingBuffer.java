@@ -23,83 +23,46 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         this.capacity = capacity;
     }
 
+    /**
+     * Adds x to the end of the ring buffer. If there is no room, then
+     * throw new RuntimeException("Ring buffer overflow"). Exceptions
+     * covered Monday.
+     */
+    @Override
     public void enqueue(T x) {
         if (isFull()) {
             throw new RuntimeException("Ring buffer overflow");
         }
-        rb[last++] = x;
-        if (last == capacity) {
-            last = 0;
-        }
+        last = (last + 1) % capacity;
+        rb[last] = x;
         fillCount++;
     }
 
     /**
-     * Dequeue oldest item in the ring buffer. If the buffer is empty, then throw
-     * new RuntimeException("Ring buffer underflow"). Exceptions covered Monday.
+     * Dequeue oldest item in the ring buffer. If the buffer is empty, then
+     * throw new RuntimeException("Ring buffer underflow"). Exceptions
+     * covered Monday.
      */
+    @Override
     public T dequeue() {
         if (isEmpty()) {
             throw new RuntimeException("Ring buffer underflow");
         }
-        T res = rb[first++];
-        if (first == capacity) {
-            first = 0;
-        }
+        first = (first + 1) % capacity;
         fillCount--;
-        return res;
+        return rb[first];
     }
 
     /**
      * Return oldest item, but don't remove it.
      */
+    @Override
     public T peek() {
         if (isEmpty()) {
             throw new RuntimeException("Ring buffer underflow");
         }
-        return rb[first];
+        return rb[(first + 1) % capacity];
     }
-
-//    /**
-//     * Adds x to the end of the ring buffer. If there is no room, then
-//     * throw new RuntimeException("Ring buffer overflow"). Exceptions
-//     * covered Monday.
-//     */
-//    @Override
-//    public void enqueue(T x) {
-//        if (isFull()) {
-//            throw new RuntimeException("Ring buffer overflow");
-//        }
-//        last = (last + 1) % capacity;
-//        rb[last] = x;
-//        fillCount++;
-//    }
-//
-//    /**
-//     * Dequeue oldest item in the ring buffer. If the buffer is empty, then
-//     * throw new RuntimeException("Ring buffer underflow"). Exceptions
-//     * covered Monday.
-//     */
-//    @Override
-//    public T dequeue() {
-//        if (isEmpty()) {
-//            throw new RuntimeException("Ring buffer underflow");
-//        }
-//        first = (first + 1) % capacity;
-//        fillCount--;
-//        return rb[first];
-//    }
-//
-//    /**
-//     * Return oldest item, but don't remove it.
-//     */
-//    @Override
-//    public T peek() {
-//        if (isEmpty()) {
-//            throw new RuntimeException("Ring buffer underflow");
-//        }
-//        return rb[(first + 1) % capacity];
-//    }
 
     @Override
     public Iterator<T> iterator() {
