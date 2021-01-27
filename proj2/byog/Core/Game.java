@@ -2,6 +2,18 @@ package byog.Core;
 
 import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
+import byog.TileEngine.Tileset;
+
+/**
+ * TODO 1.生成随机不覆盖房间
+ * TODO 2.把房间之外的空地用迷宫填满
+ * TODO 3.将所有相邻的迷宫和房间连接起来，同时也增加少量的连接
+ * TODO 4.移除掉所有的死胡同。
+ * TODO 5.玩家位置和终点位置
+ * TODO 6.处理输入wasd和胜利
+ * TODO 7.l功能
+ * TODO 8.:q功能
+ */
 
 public class Game {
     TERenderer ter = new TERenderer();
@@ -15,24 +27,82 @@ public class Game {
     public void playWithKeyboard() {
     }
 
+
     /**
-     * Method used for autograding and testing the game code. The input string will be a series
-     * of characters (for example, "n123sswwdasdassadwas", "n123sss:q", "lwww". The game should
-     * behave exactly as if the user typed these characters into the game after playing
-     * playWithKeyboard. If the string ends in ":q", the same world should be returned as if the
-     * string did not end with q. For example "n123sss" and "n123sss:q" should return the same
-     * world. However, the behavior is slightly different. After playing with "n123sss:q", the game
-     * should save, and thus if we then called playWithInputString with the string "l", we'd expect
-     * to get the exact same world back again, since this corresponds to loading the saved game.
-     * @param input the input string to feed to your program
-     * @return the 2D TETile[][] representing the state of the world
+     * Method used for test. The game should should not start from the main menu.
      */
     public TETile[][] playWithInputString(String input) {
-        // TODO: Fill out this method to run the game using the input passed in,
-        // and return a 2D tile representation of the world that would have been
-        // drawn if the same inputs had been given to playWithKeyboard().
-
         TETile[][] finalWorldFrame = null;
+        char choice = (char) input.charAt(0);
+        switch (choice) {
+            case 'n':
+                finalWorldFrame = newGame(input);
+                break;
+            case 'l':
+                finalWorldFrame = loadGame(input);
+                break;
+            case 'q':
+            default:
+                if (choice != 'q') {
+                    System.out.println("Only input n,l,q plz.");
+                }
+                System.exit(0);
+                break;
+        }
         return finalWorldFrame;
+    }
+
+    /**
+     * Play a new game.
+     */
+    private TETile[][] newGame(String input) {
+        TETile[][] world = new TETile[WIDTH][HEIGHT];
+        initializeEdge(world);
+
+        long seed = getSeed(input);
+        Room.generateRoom(world, seed);
+
+        return world;
+    }
+
+    /**
+     * Load a previous game.
+     */
+    private TETile[][] loadGame(String input) {
+        TETile[][] world = new TETile[WIDTH][HEIGHT];
+        initializeEdge(world);
+
+        long seed = getSeed(input);
+        return world;
+    }
+
+    /**
+     * Initialize the edge of the whole map.
+     */
+    private void initializeEdge(TETile[][] world) {
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
+                world[i][j] = Tileset.NOTHING;
+            }
+        }
+
+        for (int i = 0; i < WIDTH; i += WIDTH - 1) {
+            for (int j = 0; j < HEIGHT; j++) {
+                world[i][j] = Tileset.WALL;
+            }
+        }
+
+        for (int i = 0; i < HEIGHT; i += HEIGHT - 1) {
+            for (int j = 0; j < WIDTH; j++) {
+                world[j][i] = Tileset.WALL;
+            }
+        }
+    }
+
+    /**
+     * Get seed from String input.
+     */
+    private long getSeed(String input) {
+        return Long.parseLong(input.substring(1, input.indexOf('s')));
     }
 }
