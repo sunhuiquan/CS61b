@@ -6,7 +6,7 @@ import byog.TileEngine.Tileset;
 
 /**
  * 1.生成随机不覆盖房间
- * TODO 2.把房间之外的空地用迷宫填满
+ * 2.把房间之外的空地用迷宫填满
  * TODO 3.将所有相邻的迷宫和房间连接起来，同时也增加少量的连接
  * TODO 4.移除掉所有的死胡同。
  * TODO 5.玩家位置和终点位置
@@ -60,7 +60,7 @@ public class Game {
         initializeEdge(world);
 
         long seed = getSeed(input);
-        Room.generateRoom(world, seed);
+//        Room.generateRoom(world, seed);
 
         Puzzle.generatePuzzle(world, seed);
 

@@ -11,7 +11,7 @@ import java.util.Random;
 public class Room {
     private static int roomNumber;
     private static int tryTimes;
-    private static final int goalNumber = 22;
+    private static final int goalNumber = 20;
 
     public static void generateRoom(TETile[][] world, long seed) {
         roomNumber = 0;
