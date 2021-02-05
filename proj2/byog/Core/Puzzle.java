@@ -44,7 +44,7 @@ public class Puzzle {
                 return;
             }
             stack.push(pos);
-            world[pos.getX()][pos.getY()] = Tileset.WALL;
+            world[pos.getX()][pos.getY()] = Tileset.FLOOR;
 
             while (!stack.isEmpty()) {
                 pos = stack.pop();
@@ -64,41 +64,53 @@ public class Puzzle {
                                 }
                                 pos.setX(x);
                                 pos.setY(y + 2);
-                                stack.push(pos);
+                                stack.push(new Position(x, y + 2));
                                 flag = false;
                             }
                             break;
                         case 1: // down
                             if ((y - 2 > 0) && (world[x][y - 2] == Tileset.WATER)) {
                                 world[x][y - 1] = Tileset.FLOOR;
+                                world[x][y - 2] = Tileset.FLOOR;
+                                if (!isDeadEnd(world, pos)) {
+                                    stack.push(pos);
+                                }
                                 pos.setX(x);
                                 pos.setY(y - 2);
-                                stack.push(pos);
-                                world[x][y - 2] = Tileset.FLOOR;
+                                stack.push(new Position(x, y - 2));
                                 flag = false;
                             }
                             break;
                         case 2: // left
                             if ((x - 2 > 0) && (world[x - 2][y] == Tileset.WATER)) {
                                 world[x - 1][y] = Tileset.FLOOR;
+                                world[x - 2][y] = Tileset.FLOOR;
+                                if (!isDeadEnd(world, pos)) {
+                                    stack.push(pos);
+                                }
                                 pos.setX(x - 2);
                                 pos.setY(y);
-                                stack.push(pos);
-                                world[x - 2][y] = Tileset.FLOOR;
+                                stack.push(new Position(x - 2, y));
                                 flag = false;
                             }
                             break;
                         case 3: // right
                             if ((x + 2 < Game.WIDTH) && (world[x + 2][y] == Tileset.WATER)) {
                                 world[x + 1][y] = Tileset.FLOOR;
+                                world[x + 2][y] = Tileset.FLOOR;
+                                if (!isDeadEnd(world, pos)) {
+                                    stack.push(pos);
+                                }
                                 pos.setX(x + 2);
                                 pos.setY(y);
-                                stack.push(pos);
-                                world[x + 2][y] = Tileset.FLOOR;
+                                stack.push(new Position(x + 2, y));
                                 flag = false;
                             }
                             break;
                     }
+//                    if (!flag) {
+//                        helpPrint(world);
+//                    }
                 }
             }
         }
@@ -125,5 +137,15 @@ public class Puzzle {
             }
         }
         return null;
+    }
+
+    private static void helpPrint(TETile[][] world) {
+        for (int i = Game.HEIGHT - 1; i >= 0; i--) {
+            for (int j = 0; j < Game.WIDTH; j++) {
+                System.out.print(world[j][i].character());
+            }
+            System.out.println();
+        }
+        System.out.println("---------------------------");
     }
 }
