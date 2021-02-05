@@ -7,8 +7,8 @@ import byog.TileEngine.Tileset;
 /**
  * 1.生成随机不覆盖房间
  * 2.把房间之外的空地用迷宫填满
- * TODO 3.将所有相邻的迷宫和房间连接起来，同时也增加少量的连接
- * TODO 4.移除掉所有的死胡同。
+ * 3.将所有相邻的迷宫和房间连接起来，同时也增加少量的连接
+ * 4.移除掉所有的死胡同。
  * TODO 5.玩家位置和终点位置
  * TODO 6.处理输入wasd和胜利
  * TODO 7.l功能
@@ -60,10 +60,11 @@ public class Game {
         initializeEdge(world);
 
         long seed = getSeed(input);
-//        Room.generateRoom(world, seed);
-
+        Room.generateRoom(world, seed);
         Puzzle.generatePuzzle(world, seed);
-
+        Room.openRooms(world, seed);
+        Room.getRidOfDeadEnd(world);
+        Room.clearWall(world);
 
         return world;
     }
@@ -89,14 +90,14 @@ public class Game {
             }
         }
 
-        for (int i = 0; i < WIDTH; i += WIDTH - 1) {
-            for (int j = 0; j < HEIGHT; j++) {
+        for (int i = 0; i < WIDTH; i += WIDTH - 2) {
+            for (int j = 0; j < HEIGHT - 1; j++) {
                 world[i][j] = Tileset.WALL;
             }
         }
 
-        for (int i = 0; i < HEIGHT; i += HEIGHT - 1) {
-            for (int j = 0; j < WIDTH; j++) {
+        for (int i = 0; i < HEIGHT; i += HEIGHT - 2) {
+            for (int j = 0; j < WIDTH - 1; j++) {
                 world[j][i] = Tileset.WALL;
             }
         }

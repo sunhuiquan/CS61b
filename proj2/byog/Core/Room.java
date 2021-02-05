@@ -10,20 +10,21 @@ import java.util.Random;
  */
 public class Room {
     private static int roomNumber;
-    private static int tryTimes;
-    private static final int goalNumber = 20;
+    private static final int goalNumber = 11;
+    private static RoomObj[] rooms;
 
     public static void generateRoom(TETile[][] world, long seed) {
+        rooms = new RoomObj[goalNumber];
         roomNumber = 0;
-        tryTimes = 0;
+        int tryTimes = 0;
         Random ran = new Random(seed);
 
-        while (roomNumber < goalNumber && tryTimes < 300000) {
+        while (roomNumber < goalNumber && tryTimes < 1000000) {
             tryTimes++;
-            int x = RandomUtils.uniform(ran, 1, Game.WIDTH - 1);
-            int y = RandomUtils.uniform(ran, 1, Game.HEIGHT - 1);
-            int roomWidth = RandomUtils.uniform(ran, 4, 12);
-            int roomHeight = RandomUtils.uniform(ran, 4, 12);
+            int x = RandomUtils.uniform(ran, 5, Game.WIDTH - 15);
+            int y = RandomUtils.uniform(ran, 5, Game.HEIGHT - 15);
+            int roomWidth = RandomUtils.uniform(ran, 6, 10);
+            int roomHeight = RandomUtils.uniform(ran, 6, 10);
             if (!isOverLap(world, x, roomWidth, y, roomHeight)) {
                 for (int i = x; i < x + roomWidth; i += roomWidth - 1) {
                     for (int j = y; j < y + roomHeight; j++) {
@@ -40,7 +41,7 @@ public class Room {
                         world[i][j] = Tileset.FLOOR;
                     }
                 }
-                roomNumber++;
+                rooms[roomNumber++] = new RoomObj(x, y, roomWidth, roomHeight);
             }
         }
     }
@@ -53,5 +54,122 @@ public class Room {
             }
         }
         return false;
+    }
+
+    public static void openRooms(TETile[][] world, long seed) {
+        for (int i = 0; i < roomNumber; i++) {
+            Random ran = new Random(seed);
+            int x = rooms[i].x;
+            int y = rooms[i].y;
+            int w = rooms[i].w;
+            int h = rooms[i].h;
+
+            boolean up = false;
+            int xx = RandomUtils.uniform(ran, x + 1, x + w - 1);
+            if (RandomUtils.bernoulli(ran)) {
+                y = y + h;
+                up = true;
+            }
+            world[xx][y] = Tileset.FLOOR;
+            openWallUp(world, xx, y, up);
+
+            boolean right = false;
+            int yy = RandomUtils.uniform(ran, y + 1, y + h - 1);
+            if (RandomUtils.bernoulli(ran)) {
+                x = x + h;
+                right = true;
+            }
+            world[x][yy] = Tileset.FLOOR;
+            openWallRight(world, xx, y, right);
+        }
+    }
+
+    private static void openWallUp(TETile[][] world, int x, int y, boolean up) {
+        if (x < 0 || y < 0 || x >= Game.WIDTH || y >= Game.HEIGHT) {
+            throw new RuntimeException("There shouldn't overflow.");
+        }
+
+        if (up) {
+            while (world[x - 1][y] == Tileset.WALL && world[x + 1][y] == Tileset.WALL
+                    && world[x][y + 1] == Tileset.WALL) {
+                y += 1;
+                world[x][y] = Tileset.FLOOR;
+            }
+        } else {
+            while (world[x - 1][y] == Tileset.WALL && world[x + 1][y] == Tileset.WALL
+                    && world[x][y - 1] == Tileset.WALL) {
+                y -= 1;
+                world[x][y] = Tileset.FLOOR;
+            }
+        }
+    }
+
+    private static void openWallRight(TETile[][] world, int x, int y, boolean right) {
+        if (x < 0 || y < 0 || x >= Game.WIDTH || y >= Game.HEIGHT) {
+            throw new RuntimeException("There shouldn't overflow.");
+        }
+
+        if (right) {
+            while (world[x + 1][y] == Tileset.WALL && world[x][y + 1] == Tileset.WALL
+                    && world[x][y - 1] == Tileset.WALL) {
+                x += 1;
+                world[x][y] = Tileset.FLOOR;
+            }
+        } else {
+            while (world[x - 1][y] == Tileset.WALL && world[x][y + 1] == Tileset.WALL
+                    && world[x][y - 1] == Tileset.WALL) {
+                x -= 1;
+                world[x][y] = Tileset.FLOOR;
+            }
+        }
+    }
+
+    public static void getRidOfDeadEnd(TETile[][] world) {
+        boolean changed = true;
+        while (changed) {
+            changed = false;
+            for (int i = 1; i < Game.WIDTH - 1; i++) {
+                for (int j = 1; j < Game.HEIGHT - 1; j++) {
+                    if (world[i][j] == Tileset.FLOOR) {
+                        if (world[i][j + 1] == Tileset.WALL
+                                && world[i - 1][j] == Tileset.WALL
+                                && world[i + 1][j] == Tileset.WALL) {
+                            world[i][j] = Tileset.WALL;
+                        } else {
+                            if (world[i][j - 1] == Tileset.WALL
+                                    && world[i - 1][j] == Tileset.WALL
+                                    && world[i + 1][j] == Tileset.WALL) {
+                                world[i][j] = Tileset.WALL;
+
+                            } else if (world[i + 1][j] == Tileset.WALL
+                                    && world[i][j + 1] == Tileset.WALL
+                                    && world[i][j - 1] == Tileset.WALL) {
+                                world[i][j] = Tileset.WALL;
+
+                            } else if (world[i - 1][j] == Tileset.WALL
+                                    && world[i][j + 1] == Tileset.WALL
+                                    && world[i][j - 1] == Tileset.WALL) {
+                                world[i][j] = Tileset.WALL;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static void clearWall(TETile[][] world) {
+        for (int i = 0; i < Game.WIDTH; i++) {
+            for (int j = 0; j < Game.HEIGHT; j++) {
+                if (world[i][j] == Tileset.WALL) {
+                    if (!(((i - 1 >= 0) && (world[i - 1][j] == Tileset.FLOOR)) ||
+                            ((i + 1 < Game.WIDTH) && (world[i + 1][j] == Tileset.FLOOR)) ||
+                            ((j - 1 >= 0) && (world[i][j - 1] == Tileset.FLOOR)) ||
+                            ((j + 1 < Game.HEIGHT) && (world[i][j + 1] == Tileset.FLOOR)))) {
+                        world[i][j] = Tileset.NOTHING;
+                    }
+                }
+            }
+        }
     }
 }
