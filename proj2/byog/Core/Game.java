@@ -21,6 +21,8 @@ public class Game {
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
 
+    private static final String saveFilename = "Saves.txt";
+
     /**
      * Method used for playing a fresh game. The game should start from the main menu.
      */
@@ -39,16 +41,25 @@ public class Game {
                 finalWorldFrame = newGame(input);
                 break;
             case 'l':
-                finalWorldFrame = loadGame(input);
-                break;
-            case 'q':
-            default:
-                if (choice != 'q') {
-                    System.out.println("Only input n,l,q plz.");
-                }
-                System.exit(0);
+                finalWorldFrame = loadGame();
                 break;
         }
+        input = input.substring(1);
+
+        initPlayer(finalWorldFrame);
+        while (true) {
+            char c = (char) input.charAt(0);
+            if (c == 'q') {
+                break;
+            } else if (c == 's' || c == ':') {
+                saveGame(finalWorldFrame);
+            } else if (c == 'l') {
+                finalWorldFrame = loadGame();
+            } else {
+                movePlayer(finalWorldFrame, c);
+            }
+        }
+
         return finalWorldFrame;
     }
 
@@ -72,12 +83,30 @@ public class Game {
     /**
      * Load a previous game.
      */
-    private TETile[][] loadGame(String input) {
+    private TETile[][] loadGame() {
         TETile[][] world = new TETile[WIDTH][HEIGHT];
-        initializeEdge(world);
 
-        long seed = getSeed(input);
         return world;
+    }
+
+    /**
+     * Save a game to file(Saves.txt).
+     */
+    private void saveGame(TETile[][] world) {
+    }
+
+    /**
+     * Initiate a Player object.
+     */
+    private void initPlayer(TETile[][] world) {
+
+    }
+
+    /**
+     * Move a player.
+     */
+    private void movePlayer(TETile[][] world, char c) {
+
     }
 
     /**
@@ -107,6 +136,8 @@ public class Game {
      * Get seed from String input.
      */
     private long getSeed(String input) {
-        return Long.parseLong(input.substring(1, input.indexOf('s')));
+        long seed = Long.parseLong(input.substring(1, input.indexOf('s')));
+        input = input.substring(input.indexOf('s'));
+        return seed;
     }
 }
