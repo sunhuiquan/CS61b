@@ -62,7 +62,7 @@ public class Game {
         long seed = getSeed(input);
         Room.generateRoom(world, seed);
 
-        Puzzle.generatePuzzle(world);
+        Puzzle.generatePuzzle(world, seed);
 
 
         return world;
