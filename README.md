@@ -1,11 +1,10 @@
-### 通过测试:
+### 通过测试(部分风格或者一点小bug扣了几分):
 - lab 1 <br>  
 - lab 2 <br>  
 - pro 0 <br>  
 - lab 3 <br>  
 - pro 1a<br>  
+- pro 1b<br>  
 - pro 1g<br>  
 - lab 5 <br>  
-
-### 其他:
-- proj1b差了几分，查了半天不知道哪里错了，闹鬼了不看了<br>  
+- pro 2 phase 1<br>  
