@@ -12,9 +12,9 @@ import java.util.Random;
  * 3.将所有相邻的迷宫和房间连接起来，同时也增加少量的连接
  * 4.移除掉所有的死胡同。
  * 5.玩家位置和终点位置
- * TODO 6.处理输入wasd和胜利
- * TODO 7.l功能
- * TODO 8.:q功能
+ * 6.处理输入wasd和胜利
+ * TODO 7.l和:功能
+ * TODO 8.q功能
  */
 
 public class Game {
@@ -54,13 +54,18 @@ public class Game {
             char c = (char) input.charAt(0);
             if (c == 'q') {
                 break;
-            } else if (c == 's' || c == ':') {
+            } else if (c == ':') {
                 saveGame(finalWorldFrame);
             } else if (c == 'l') {
                 finalWorldFrame = loadGame();
             } else {
                 movePlayer(finalWorldFrame, c);
+                if (Player.pos.getX() == Player.des.getX() && Player.pos.getY() == Player.des.getY()) {
+                    System.out.println("You win.");
+                    break;
+                }
             }
+            input = input.substring(1);
         }
 
         return finalWorldFrame;
@@ -130,7 +135,42 @@ public class Game {
      * Move a player.
      */
     private void movePlayer(TETile[][] world, char c) {
-
+        int x = Player.pos.getX();
+        int y = Player.pos.getY();
+        switch (c) {
+            case 'w':
+                if (world[x][y + 1] != Tileset.WALL) {
+                    world[x][y] = Tileset.FLOOR;
+                    world[x][y + 1] = Player.playerTile;
+                    Player.pos.setX(x);
+                    Player.pos.setY(y + 1);
+                }
+                break;
+            case 's':
+                if (world[x][y - 1] != Tileset.WALL) {
+                    world[x][y] = Tileset.FLOOR;
+                    world[x][y - 1] = Player.playerTile;
+                    Player.pos.setX(x);
+                    Player.pos.setY(y - 1);
+                }
+                break;
+            case 'a':
+                if (world[x - 1][y] != Tileset.WALL) {
+                    world[x][y] = Tileset.FLOOR;
+                    world[x - 1][y] = Player.playerTile;
+                    Player.pos.setX(x - 1);
+                    Player.pos.setY(y);
+                }
+                break;
+            case 'd':
+                if (world[x + 1][y] != Tileset.WALL) {
+                    world[x][y] = Tileset.FLOOR;
+                    world[x + 1][y] = Player.playerTile;
+                    Player.pos.setX(x + 1);
+                    Player.pos.setY(y);
+                }
+                break;
+        }
     }
 
     /**
@@ -160,8 +200,14 @@ public class Game {
      * Get seed from String input.
      */
     private long getSeed(String input) {
-        long seed = Long.parseLong(input.substring(1, input.indexOf('s')));
-        input = input.substring(input.indexOf('s'));
+        int i = 1;
+        for (; i < input.length(); i++) {
+            if (!(input.charAt(i) >= '0' && input.charAt(i) <= '9')) {
+                break;
+            }
+        }
+        long seed = Long.parseLong(input.substring(1, i));
+        input = input.substring(i);
         return seed;
     }
 }
