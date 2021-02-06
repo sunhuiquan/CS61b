@@ -108,11 +108,21 @@ public class Game {
             for (int i = 0; i < Game.WIDTH; i++) {
                 for (int j = 0; j < Game.HEIGHT; j++) {
                     switch (Integer.parseInt(in.readLine())) {
-                        case 0 -> world[i][j] = Tileset.WALL;
-                        case 1 -> world[i][j] = Tileset.FLOOR;
-                        case 2 -> world[i][j] = Tileset.PLAYER;
-                        case 3 -> world[i][j] = Tileset.UNLOCKED_DOOR;
-                        default -> world[i][j] = Tileset.NOTHING;
+                        case 0:
+                            world[i][j] = Tileset.WALL;
+                            break;
+                        case 1:
+                            world[i][j] = Tileset.FLOOR;
+                            break;
+                        case 2:
+                            world[i][j] = Tileset.PLAYER;
+                            break;
+                        case 3:
+                            world[i][j] = Tileset.UNLOCKED_DOOR;
+                            break;
+                        default:
+                            world[i][j] = Tileset.NOTHING;
+                            break;
                     }
                 }
             }
@@ -138,11 +148,21 @@ public class Game {
             for (int i = 0; i < Game.WIDTH; i++) {
                 for (int j = 0; j < Game.HEIGHT; j++) {
                     switch (world[i][j].character()) {
-                        case '#' -> out.write("0\n");
-                        case '·' -> out.write("1\n");
-                        case '@' -> out.write("2\n");
-                        case '▢' -> out.write("3\n");
-                        default -> out.write("4\n");
+                        case '#':
+                            out.write("0\n");
+                            break;
+                        case '·':
+                            out.write("1\n");
+                            break;
+                        case '@':
+                            out.write("2\n");
+                            break;
+                        case '▢':
+                            out.write("3\n");
+                            break;
+                        default:
+                            out.write("4\n");
+                            break;
                     }
                 }
             }
