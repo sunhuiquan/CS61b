@@ -14,7 +14,7 @@ import java.util.Random;
  * 4.移除掉所有的死胡同。
  * 5.玩家位置和终点位置
  * 6.处理输入wasd和胜利
- * TODO 7.l和:功能
+ * 7.l和:功能
  * 8.q功能
  */
 
@@ -42,7 +42,9 @@ public class Game {
         char choice = input.charAt(0);
         switch (choice) {
             case 'n':
-                finalWorldFrame = newGame(input);
+                StringBuilder words = new StringBuilder(input);
+                finalWorldFrame = newGame(words);
+                input = words.toString();
                 initPlayer(finalWorldFrame, seed);
                 break;
             case 'l':
@@ -81,13 +83,11 @@ public class Game {
     /**
      * Play a new game.
      */
-    private TETile[][] newGame(String input) {
+    private TETile[][] newGame(StringBuilder input) {
         TETile[][] world = new TETile[WIDTH][HEIGHT];
         initializeEdge(world);
 
-        StringBuilder words = new StringBuilder(input);
-        seed = getSeed(words);
-        input = words.toString();
+        seed = getSeed(input);
         Room.generateRoom(world, seed);
         Puzzle.generatePuzzle(world, seed);
         Room.openRooms(world, seed);
@@ -110,6 +110,8 @@ public class Game {
                     switch (Integer.parseInt(in.readLine())) {
                         case 0 -> world[i][j] = Tileset.WALL;
                         case 1 -> world[i][j] = Tileset.FLOOR;
+                        case 2 -> world[i][j] = Tileset.PLAYER;
+                        case 3 -> world[i][j] = Tileset.UNLOCKED_DOOR;
                         default -> world[i][j] = Tileset.NOTHING;
                     }
                 }
@@ -138,7 +140,9 @@ public class Game {
                     switch (world[i][j].character()) {
                         case '#' -> out.write("0\n");
                         case '·' -> out.write("1\n");
-                        default -> out.write("2\n");
+                        case '@' -> out.write("2\n");
+                        case '▢' -> out.write("3\n");
+                        default -> out.write("4\n");
                     }
                 }
             }
@@ -191,7 +195,7 @@ public class Game {
             case 'w':
                 if (world[x][y + 1] != Tileset.WALL) {
                     world[x][y] = Tileset.FLOOR;
-                    world[x][y + 1] = Player.playerTile;
+                    world[x][y + 1] = Tileset.PLAYER;
                     Player.pos.setX(x);
                     Player.pos.setY(y + 1);
                 }
@@ -199,7 +203,7 @@ public class Game {
             case 's':
                 if (world[x][y - 1] != Tileset.WALL) {
                     world[x][y] = Tileset.FLOOR;
-                    world[x][y - 1] = Player.playerTile;
+                    world[x][y - 1] = Tileset.PLAYER;
                     Player.pos.setX(x);
                     Player.pos.setY(y - 1);
                 }
@@ -207,7 +211,7 @@ public class Game {
             case 'a':
                 if (world[x - 1][y] != Tileset.WALL) {
                     world[x][y] = Tileset.FLOOR;
-                    world[x - 1][y] = Player.playerTile;
+                    world[x - 1][y] = Tileset.PLAYER;
                     Player.pos.setX(x - 1);
                     Player.pos.setY(y);
                 }
@@ -215,7 +219,7 @@ public class Game {
             case 'd':
                 if (world[x + 1][y] != Tileset.WALL) {
                     world[x][y] = Tileset.FLOOR;
-                    world[x + 1][y] = Player.playerTile;
+                    world[x + 1][y] = Tileset.PLAYER;
                     Player.pos.setX(x + 1);
                     Player.pos.setY(y);
                 }
