@@ -41,13 +41,23 @@ public class Game {
         TETile[][] finalWorldFrame = null;
         char choice = input.charAt(0);
         switch (choice) {
-            case 'n' -> finalWorldFrame = newGame(input);
-            case 'l' -> finalWorldFrame = loadGame();
-            case 'q' -> System.exit(0);
+            case 'n':
+                finalWorldFrame = newGame(input);
+                initPlayer(finalWorldFrame, seed);
+                break;
+            case 'l':
+                Player.pos = new Position(0, 0);
+                Player.des = new Position(0, 0);
+                finalWorldFrame = loadGame();
+                input = input.substring(1);
+                finalWorldFrame[Player.pos.getX()][Player.pos.getY()] = Tileset.PLAYER;
+                finalWorldFrame[Player.des.getX()][Player.des.getY()] = Tileset.UNLOCKED_DOOR;
+                break;
+            case 'q':
+                System.exit(0);
+                break;
         }
-        input = input.substring(1);
 
-        initPlayer(finalWorldFrame, seed);
         while (true) {
             char c = input.charAt(0);
             if (c == 'q') {
@@ -87,20 +97,61 @@ public class Game {
         return world;
     }
 
-//    /**
-//     * Load a previous game.
-//     */
-//    private TETile[][] loadGame() {
-//        TETile[][] world = null;
-//
-//    }
-//
-//    /**
-//     * Save a game to file(Saves.txt).
-//     */
-//    private void saveGame(TETile[][] world) {
-//
-//    }
+    /**
+     * Load a previous game.
+     */
+    private TETile[][] loadGame() {
+        TETile[][] world = new TETile[Game.WIDTH][Game.HEIGHT];
+        try {
+            FileReader fri = new FileReader(saveFilename);
+            BufferedReader in = new BufferedReader(fri);
+            for (int i = 0; i < Game.WIDTH; i++) {
+                for (int j = 0; j < Game.HEIGHT; j++) {
+                    switch (Integer.parseInt(in.readLine())) {
+                        case 0 -> world[i][j] = Tileset.WALL;
+                        case 1 -> world[i][j] = Tileset.FLOOR;
+                        default -> world[i][j] = Tileset.NOTHING;
+                    }
+                }
+            }
+            Player.pos.setX(Integer.parseInt(in.readLine()));
+            Player.pos.setY(Integer.parseInt(in.readLine()));
+            Player.des.setX(Integer.parseInt(in.readLine()));
+            Player.des.setY(Integer.parseInt(in.readLine()));
+            in.close();
+            fri.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return world;
+    }
+
+    /**
+     * Save a game to file(Saves.txt).
+     */
+    private void saveGame(TETile[][] world) {
+        try {
+            FileWriter fwo = new FileWriter(saveFilename);
+            BufferedWriter out = new BufferedWriter(fwo);
+            for (int i = 0; i < Game.WIDTH; i++) {
+                for (int j = 0; j < Game.HEIGHT; j++) {
+                    switch (world[i][j].character()) {
+                        case '#' -> out.write("0\n");
+                        case '·' -> out.write("1\n");
+                        default -> out.write("2\n");
+                    }
+                }
+            }
+            out.write(Player.pos.getX() + "\n");
+            out.write(Player.pos.getY() + "\n");
+            out.write(Player.des.getX() + "\n");
+            out.write(Player.des.getY() + "\n");
+            out.close();
+            fwo.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Initiate a Player object.
