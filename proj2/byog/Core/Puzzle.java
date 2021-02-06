@@ -119,10 +119,10 @@ public class Puzzle {
     private static boolean isDeadEnd(TETile[][] world, Position pos) {
         int x = pos.getX();
         int y = pos.getY();
-        if (((y + 2 < Game.HEIGHT) && (world[x][y + 2] == Tileset.WATER)) ||
-                ((y - 2 >= 0) && (world[x][y - 2] == Tileset.WATER)) ||
-                ((x + 2 < Game.WIDTH) && (world[x + 2][y] == Tileset.WATER)) ||
-                ((x - 2 >= 0) && (world[x - 2][y] == Tileset.WATER))) {
+        if (((y + 2 < Game.HEIGHT) && (world[x][y + 2] == Tileset.WATER))
+                || ((y - 2 >= 0) && (world[x][y - 2] == Tileset.WATER))
+                || ((x + 2 < Game.WIDTH) && (world[x + 2][y] == Tileset.WATER))
+                || ((x - 2 >= 0) && (world[x - 2][y] == Tileset.WATER))) {
             return false;
         }
         return true;
