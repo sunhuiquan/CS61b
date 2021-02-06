@@ -33,11 +33,19 @@ public class Game {
     public void playWithKeyboard() {
     }
 
+    private static String lowerString(String input) {
+        StringBuilder sb = new StringBuilder("");
+        for (int i = 0; i < input.length(); i++) {
+            sb.append(Character.toLowerCase(input.charAt(i)));
+        }
+        return sb.toString();
+    }
 
     /**
      * Method used for test. The game should should not start from the main menu.
      */
     public TETile[][] playWithInputString(String input) {
+        input = lowerString(input);
         TETile[][] finalWorldFrame = null;
         char choice = input.charAt(0);
         switch (choice) {
@@ -60,22 +68,22 @@ public class Game {
                 break;
         }
 
-        while (true) {
-            char c = input.charAt(0);
-            if (c == 'q') {
-                break;
-            } else if (c == ':') {
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            if (c == ':') {
                 saveGame(finalWorldFrame);
             } else if (c == 'l') {
                 finalWorldFrame = loadGame();
             } else {
+                if (c == 'q') {
+                    break;
+                }
                 movePlayer(finalWorldFrame, c);
                 if (Player.pos.getX() == Player.des.getX() && Player.pos.getY() == Player.des.getY()) {
                     System.out.println("You win.");
                     break;
                 }
             }
-            input = input.substring(1);
         }
         return finalWorldFrame;
     }
@@ -274,14 +282,9 @@ public class Game {
      * Get seed from String input.
      */
     private long getSeed(StringBuilder input) {
-        int i = 1;
-        for (; i < input.length(); i++) {
-            if (!(input.charAt(i) >= '0' && input.charAt(i) <= '9')) {
-                break;
-            }
-        }
+        int i = input.indexOf("s");
         long seed = Long.parseLong(input.substring(1, i));
-        input.delete(0, i);
+        input.delete(0, i + 1);
         return seed;
     }
 }
