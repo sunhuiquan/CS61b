@@ -4,12 +4,14 @@ import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
 
+import java.util.Random;
+
 /**
  * 1.生成随机不覆盖房间
  * 2.把房间之外的空地用迷宫填满
  * 3.将所有相邻的迷宫和房间连接起来，同时也增加少量的连接
  * 4.移除掉所有的死胡同。
- * TODO 5.玩家位置和终点位置
+ * 5.玩家位置和终点位置
  * TODO 6.处理输入wasd和胜利
  * TODO 7.l功能
  * TODO 8.:q功能
@@ -20,8 +22,9 @@ public class Game {
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
-
     private static final String saveFilename = "Saves.txt";
+
+    private long seed;
 
     /**
      * Method used for playing a fresh game. The game should start from the main menu.
@@ -46,7 +49,7 @@ public class Game {
         }
         input = input.substring(1);
 
-        initPlayer(finalWorldFrame);
+        initPlayer(finalWorldFrame, seed);
         while (true) {
             char c = (char) input.charAt(0);
             if (c == 'q') {
@@ -70,7 +73,7 @@ public class Game {
         TETile[][] world = new TETile[WIDTH][HEIGHT];
         initializeEdge(world);
 
-        long seed = getSeed(input);
+        seed = getSeed(input);
         Room.generateRoom(world, seed);
         Puzzle.generatePuzzle(world, seed);
         Room.openRooms(world, seed);
@@ -98,8 +101,29 @@ public class Game {
     /**
      * Initiate a Player object.
      */
-    private void initPlayer(TETile[][] world) {
+    private void initPlayer(TETile[][] world, long seed) {
+        Random ran = new Random(seed);
+        while (true) {
+            int x = RandomUtils.uniform(ran, 1, Game.WIDTH);
+            int y = RandomUtils.uniform(ran, 1, Game.HEIGHT);
+            if (world[x][y] == Tileset.FLOOR) {
+                Player.pos = new Position(x, y);
+                Player.playerTile = Tileset.PLAYER;
+                break;
+            }
+        }
+        while (true) {
+            int x = RandomUtils.uniform(ran, 1, Game.WIDTH);
+            int y = RandomUtils.uniform(ran, 1, Game.HEIGHT);
+            if (world[x][y] == Tileset.WALL) {
+                Player.des = new Position(x, y);
+                Player.destinationTile = Tileset.UNLOCKED_DOOR;
+                break;
+            }
+        }
 
+        world[Player.pos.getX()][Player.pos.getY()] = Tileset.PLAYER;
+        world[Player.des.getX()][Player.des.getY()] = Tileset.UNLOCKED_DOOR;
     }
 
     /**
