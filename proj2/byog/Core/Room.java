@@ -65,7 +65,7 @@ public class Room {
             int h = rooms[i].h;
 
             boolean up = false;
-            int xx = RandomUtils.uniform(ran, x + 1, x + w - 1);
+            int xx = RandomUtils.uniform(ran, x + 2, x + w - 2);
             if (RandomUtils.bernoulli(ran)) {
                 y = y + h;
                 up = true;
@@ -74,9 +74,9 @@ public class Room {
             openWallUp(world, xx, y, up);
 
             boolean right = false;
-            int yy = RandomUtils.uniform(ran, y + 1, y + h - 1);
+            int yy = RandomUtils.uniform(ran, y + 2, y + h - 2);
             if (RandomUtils.bernoulli(ran)) {
-                x = x + h;
+                x = x + w;
                 right = true;
             }
             world[x][yy] = Tileset.FLOOR;
