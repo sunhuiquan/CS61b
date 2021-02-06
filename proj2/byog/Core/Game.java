@@ -4,6 +4,7 @@ import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
 
+import java.io.*;
 import java.util.Random;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Random;
  * 5.玩家位置和终点位置
  * 6.处理输入wasd和胜利
  * TODO 7.l和:功能
- * TODO 8.q功能
+ * 8.q功能
  */
 
 public class Game {
@@ -38,20 +39,17 @@ public class Game {
      */
     public TETile[][] playWithInputString(String input) {
         TETile[][] finalWorldFrame = null;
-        char choice = (char) input.charAt(0);
+        char choice = input.charAt(0);
         switch (choice) {
-            case 'n':
-                finalWorldFrame = newGame(input);
-                break;
-            case 'l':
-                finalWorldFrame = loadGame();
-                break;
+            case 'n' -> finalWorldFrame = newGame(input);
+            case 'l' -> finalWorldFrame = loadGame();
+            case 'q' -> System.exit(0);
         }
         input = input.substring(1);
 
         initPlayer(finalWorldFrame, seed);
         while (true) {
-            char c = (char) input.charAt(0);
+            char c = input.charAt(0);
             if (c == 'q') {
                 break;
             } else if (c == ':') {
@@ -67,7 +65,6 @@ public class Game {
             }
             input = input.substring(1);
         }
-
         return finalWorldFrame;
     }
 
@@ -78,7 +75,9 @@ public class Game {
         TETile[][] world = new TETile[WIDTH][HEIGHT];
         initializeEdge(world);
 
-        seed = getSeed(input);
+        StringBuilder words = new StringBuilder(input);
+        seed = getSeed(words);
+        input = words.toString();
         Room.generateRoom(world, seed);
         Puzzle.generatePuzzle(world, seed);
         Room.openRooms(world, seed);
@@ -88,20 +87,20 @@ public class Game {
         return world;
     }
 
-    /**
-     * Load a previous game.
-     */
-    private TETile[][] loadGame() {
-        TETile[][] world = new TETile[WIDTH][HEIGHT];
-
-        return world;
-    }
-
-    /**
-     * Save a game to file(Saves.txt).
-     */
-    private void saveGame(TETile[][] world) {
-    }
+//    /**
+//     * Load a previous game.
+//     */
+//    private TETile[][] loadGame() {
+//        TETile[][] world = null;
+//
+//    }
+//
+//    /**
+//     * Save a game to file(Saves.txt).
+//     */
+//    private void saveGame(TETile[][] world) {
+//
+//    }
 
     /**
      * Initiate a Player object.
@@ -199,7 +198,7 @@ public class Game {
     /**
      * Get seed from String input.
      */
-    private long getSeed(String input) {
+    private long getSeed(StringBuilder input) {
         int i = 1;
         for (; i < input.length(); i++) {
             if (!(input.charAt(i) >= '0' && input.charAt(i) <= '9')) {
@@ -207,7 +206,7 @@ public class Game {
             }
         }
         long seed = Long.parseLong(input.substring(1, i));
-        input = input.substring(i);
+        input.delete(0, i);
         return seed;
     }
 }
