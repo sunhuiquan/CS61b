@@ -54,30 +54,74 @@ public class MemoryGame {
     }
 
     public void drawFrame(String s) {
-        //TODO: Take the string and display it in the center of the screen
-        //TODO: If game is not over, display relevant game information at the top of the screen
+        int midWidth = width / 2;
+        int midHeight = height / 2;
+        StdDraw.clear(Color.black);
+
         if (!gameOver) {
-            s = ENCOURAGEMENT[rand.nextInt(ENCOURAGEMENT.length)];
+            Font small = new Font("Monaco", Font.BOLD, 20);
+            StdDraw.setFont(small);
+            StdDraw.textLeft(1, height - 1, "Rount: " + round);
+            StdDraw.text(midWidth, height - 1, playerTurn ? "Type" : "Watch");
+            StdDraw.textRight(width - 1, height - 1, ENCOURAGEMENT[round % ENCOURAGEMENT.length]);
+            StdDraw.line(0, height - 2, width, height - 2);
         }
 
+        Font big = new Font("Monaco", Font.BOLD, 30);
+        StdDraw.setFont(big);
+        StdDraw.setPenColor(Color.white);
+        StdDraw.text(midWidth, midHeight, s);
+        StdDraw.show();
     }
 
     public void flashSequence(String letters) {
-        //TODO: Display each character in letters, making sure to blank the screen between letters
+        for (int i = 0; i < letters.length(); i++) {
+            drawFrame(String.valueOf(letters.charAt(i)));
+            StdDraw.pause(750);
+            drawFrame(" ");
+            StdDraw.pause(750);
+        }
     }
 
     public String solicitNCharsInput(int n) {
-        //TODO: Read n letters of player input
-        return null;
+        StringBuilder sb = new StringBuilder();
+        drawFrame(sb.toString());
+
+        while (sb.length() < n) {
+            if (!StdDraw.hasNextKeyTyped()) {
+                continue;
+            }
+            char key = StdDraw.nextKeyTyped();
+            sb.append(key);
+            drawFrame(sb.toString());
+        }
+        StdDraw.pause(500);
+        return sb.toString();
     }
 
     public void startGame() {
         round = 1;
         gameOver = false;
-        playerTurn = false;
 
-        while(!gameOver){
+        while (!gameOver) {
+            playerTurn = false;
+            drawFrame("Round: " + round);
+            StdDraw.pause(1500);
 
+            String roundString = generateRandomString(round);
+            flashSequence(roundString);
+
+            playerTurn = true;
+            String userInput = solicitNCharsInput(round);
+
+            if (!userInput.equals(roundString)) {
+                gameOver = true;
+                drawFrame("Game Over\nFinal level: " + round);
+            } else {
+                drawFrame("Correctly, move on next round");
+                StdDraw.pause(1500);
+                round++;
+            }
         }
     }
 }
